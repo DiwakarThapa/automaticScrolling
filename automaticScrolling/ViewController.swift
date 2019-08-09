@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var x = 0
     var totalItem = 15
+    var visibleCellSize:CGFloat?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -23,17 +24,25 @@ class ViewController: UIViewController {
  
     func startAnimation() {
         Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(startAnimate), userInfo: nil, repeats: true)
+        
     }
 
     @objc func startAnimate() {
-        if x < (totalItem - 1) {
-            x += 1
-            self.collectionView.scrollToItem(at: IndexPath(item: x, section: 0), at: .centeredHorizontally, animated: true)
+        let with = view.frame.width
+        print("x",collectionView.contentOffset.x + with,"width",collectionView.contentSize.width)
+        if (collectionView.contentOffset.x + with) < collectionView.contentSize.width {
+           self.collectionView.scrollRectToVisible(CGRect(x: (visibleCellSize ?? 0) + collectionView.contentOffset.x + 10, y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height), animated: true)
         } else {
-            self.x = 0
-            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
+            self.collectionView.scrollRectToVisible(CGRect(x: 0 , y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height), animated: true)
         }
     }
+//    if x < (totalItem - 1) {
+//    x += 1
+//    self.collectionView.scrollToItem(at: IndexPath(item: x, section: 0), at: .centeredHorizontally, animated: true)
+//    } else {
+//    self.x = 0
+//    self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
+//    }
 }
 
 extension ViewController: UICollectionViewDelegate {
@@ -49,6 +58,7 @@ extension ViewController: UICollectionViewDataSource {
         guard let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
+        visibleCellSize = self.collectionView.visibleCells.first?.frame.width
         print("x:",collectionView.contentOffset.x)
         return collectionViewCell
     }
