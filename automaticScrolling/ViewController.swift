@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     var x = 0
     var totalItem = 15
     var visibleCellSize:CGFloat?
+    var spacingBetweenCell:CGFloat = 10.0
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -31,7 +32,7 @@ class ViewController: UIViewController {
         let with = view.frame.width
         print("x",collectionView.contentOffset.x + with,"width",collectionView.contentSize.width)
         if (collectionView.contentOffset.x + with) < collectionView.contentSize.width {
-           self.collectionView.scrollRectToVisible(CGRect(x: (visibleCellSize ?? 0) + collectionView.contentOffset.x + 10, y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height), animated: true)
+           self.collectionView.scrollRectToVisible(CGRect(x: (visibleCellSize ?? 0) + (collectionView.contentOffset.x + self.spacingBetweenCell), y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height), animated: true)
         } else {
             self.collectionView.scrollRectToVisible(CGRect(x: 0 , y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height), animated: true)
         }
